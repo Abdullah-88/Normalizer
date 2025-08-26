@@ -4,7 +4,7 @@ Normalization as a Token Mixing Process in Transformer Architecture
 
 Abdullah Nazhat Abdullah, Tarkan Aydin
 
-DOI: 10.13140/RG.2.2.27229.47841
+DOI: http://dx.doi.org/10.13140/RG.2.2.27229.47841
 
 # Abstract
 
