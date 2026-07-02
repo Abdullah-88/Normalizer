@@ -4,7 +4,6 @@ from torch import nn
 
        
  
-
 class GatingUnit(nn.Module):
     def __init__(self,dim):
         super().__init__()
@@ -36,8 +35,8 @@ class NormalizerBlock(nn.Module):
         super().__init__()
        
          
-        self.norm_global = nn.LayerNorm(d_model * num_tokens)
-        self.norm_local = nn.LayerNorm(d_model)                    
+        self.norm_global = nn.LayerNorm(d_model * num_tokens, elementwise_affine=False)
+        self.norm_local = nn.LayerNorm(d_model, elementwise_affine=False)                    
         self.gating = GatingUnit(d_model)
         
     def forward(self, x):
