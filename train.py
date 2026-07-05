@@ -7,8 +7,6 @@ from torchvision import datasets
 from torchvision.transforms import ToTensor, Normalize, Compose 
 from normalizer import Normalizer
 
-
-
 transform = Compose([
  
 ToTensor(),
@@ -29,26 +27,20 @@ test_data = datasets.CIFAR10(
                                        download=True,
                                        transform=transform 
                                        )                                       
- 
-                                     
+                                      
 batch_size = 128
 
 train_dataloader = DataLoader(training_data, batch_size=batch_size,shuffle=True)
 test_dataloader = DataLoader(test_data, batch_size=batch_size)
-
 
 for X, y in test_dataloader:
     print(f"Shape of X [N,C,H,W]:{X.shape}")
     print(f"Shape of y:{y.shape}{y.dtype}")
     break
 
-
-
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 print(f"using {device} device") 
-
-
 
 class NormalizerImageClassification(Normalizer):
     def __init__(
@@ -60,10 +52,9 @@ class NormalizerImageClassification(Normalizer):
         d_model = 256,
         num_tokens = 64,
         num_layers=4,
-       
-        
+               
     ):
-        super().__init__(d_model,num_tokens, num_layers)
+        super().__init__(d_model, num_tokens, num_layers)
         self.patcher = nn.Conv2d(
             in_channels, d_model, kernel_size=patch_size, stride=patch_size
         )
@@ -83,13 +74,8 @@ class NormalizerImageClassification(Normalizer):
 model = NormalizerImageClassification().to(device)
 print(model)
 
-
-
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(),lr=1e-3)
-
-
-
 
 def train(dataloader, model, loss_fn, optimizer):
     size = len(dataloader.dataset)
@@ -100,20 +86,15 @@ def train(dataloader, model, loss_fn, optimizer):
     for batch, (X,y) in enumerate(dataloader):
         X, y = X.to(device), y.to(device)
        
-       
         pred = model(X)
         loss = loss_fn(pred,y)
         
-       
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
         train_loss += loss.item()
         _, labels = torch.max(pred.data, 1)
         correct += labels.eq(y.data).type(torch.float).sum()
-
-        
-
 
         if batch % 100 == 0:
             loss, current = loss.item(), batch * len(X)
@@ -123,10 +104,6 @@ def train(dataloader, model, loss_fn, optimizer):
     train_accuracy = 100. * correct.item() / size
     print(train_accuracy)
     return train_loss,train_accuracy 
-
-
-
-
 
 def test(dataloader, model, loss_fn):
     size = len(dataloader.dataset)            
@@ -146,17 +123,12 @@ def test(dataloader, model, loss_fn):
     test_accuracy = 100*correct      
     return test_loss, test_accuracy
 
-
-
-
-
 logname = "/PATH/Normalizer/Experiments_cifar10/logs_normalizer/logs_cifar10.csv"
 if not os.path.exists(logname):
   with open(logname, 'w') as logfile:
     logwriter = csv.writer(logfile, delimiter=',')
     logwriter.writerow(['epoch', 'train loss', 'train acc',
                         'test loss', 'test acc'])
-
 
 epochs = 100
 for epoch in range(epochs):
@@ -169,10 +141,7 @@ for epoch in range(epochs):
                             test_loss, test_acc])
 print("Done!")
 
-
-
 path = "/PATH/Normalizer/Experiments_cifar10/weights_normalizer"
 model_name = "NormalizerImageClassification_cifar10"
 torch.save(model.state_dict(), f"{path}/{model_name}.pth")
 print(f"Saved Model State to {path}/{model_name}.pth ")
-
