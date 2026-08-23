@@ -57,7 +57,7 @@ class Normalizer(nn.Module):
         super().__init__()
         
         self.model = nn.Sequential(
-            *[NormalizerBlock(d_model, num_tokens) for _ in range(num_layers)]
+            *[NormalizerBlock(d_model, d_ffn, num_tokens) for _ in range(num_layers)]
         )
 
     def forward(self, x):
