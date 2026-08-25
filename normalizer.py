@@ -26,8 +26,8 @@ class NormalizerBlock(nn.Module):
     def __init__(self, d_model, d_ffn, num_tokens):
         super().__init__()
                 
-        self.norm_global = nn.LayerNorm(d_model * num_tokens, elementwise_affine=False)
-        self.norm_local = nn.LayerNorm(d_model, elementwise_affine=False)                    
+        self.norm_global = nn.LayerNorm(d_model * num_tokens, elementwise_affine = False)
+        self.norm_local = nn.LayerNorm(d_model, elementwise_affine = False)                    
         self.gating = GatingUnit(d_model, d_ffn)
         
     def forward(self, x):
@@ -37,10 +37,10 @@ class NormalizerBlock(nn.Module):
         dim0 = x.shape[0]
         dim1 = x.shape[1]
         dim2 = x.shape[2]
-        x = x.reshape([dim0,dim1*dim2])
+        x = x.reshape([dim0, dim1 * dim2])
         x = self.norm_global(x)
       
-        x = x.reshape([dim0,dim1,dim2])
+        x = x.reshape([dim0, dim1, dim2])
         x = x + residual 
                
         residual = x
